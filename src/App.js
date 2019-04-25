@@ -11,13 +11,16 @@ class App extends React.Component {
       reactQues: ['react no. 1', 'react no. 2', 'react no. 3', 'react no. 4', 'react no. 5'],
       nodeQues: ['node no. 1', 'node no. 2', 'node no. 3', 'node no. 4', 'node no. 5'],
       csQues: ['cs no. 1', 'cs no. 2', 'cs no. 3', 'cs no. 4', 'cs no. 5'],
+      
+      topicSelected: '',
       topic: '',
-      timerStarted: false,
-      timerStopped: true,
-      timerHour: 0,
-      timerMinutes: 0,
+      
       timerSeconds: 0,
-      stopWatch: 0
+      timerMinutes: 0,
+      timerHour: 0,
+      timerStopped: true,
+      timeSelected: 0,
+      stopWatch: 0,
     }
   
   }
@@ -48,10 +51,10 @@ class App extends React.Component {
     }
   }
 
-  startTimer = (e) => {
-    e.preventDefault()
+  startTimer = (timeSelected) => {
+    // e.preventDefault()
     this.setState({
-      stopWatch: e.target.id * 5
+      stopWatch: timeSelected
     })
 
     if(this.state.timerStopped) {
@@ -87,10 +90,39 @@ class App extends React.Component {
         timerSeconds: 0,
         timerMinutes: 0,
         timerHour: 0
-      })  
+      })
     }
   }
 
+  stopTimer =() => {
+    if(this.state.timerStopped == false) {
+      clearInterval(this.timer)
+      this.setState({
+        timerStarted: false,
+        timerStopped: true,
+        timerSeconds: 0,
+        timerMinutes: 0,
+        timerHour: 0
+      })
+    }
+  }
+
+  selectTime =(e) => {
+    e.preventDefault()
+
+    this.setState({
+      timeSelected: e.target.id * 5
+    })
+  }
+
+  start = (e) => {
+    e.preventDefault()
+    this.setState({
+      topicSelected: this.state.topic,
+      // topic: ''
+    })
+    this.startTimer(this.state.timeSelected)
+  }
 
   render() {
     return (
@@ -102,15 +134,15 @@ class App extends React.Component {
           <button onClick={this.setTopic} id={4}>CS</button>
         </div>
         <div>
-          <button onClick={this.startTimer} id={1}>5 min</button>
-          <button onClick={this.startTimer} id={2}>10 min</button>
-          <button onClick={this.startTimer} id={3}>15 min</button>
-          <button onClick={this.startTimer} id={4}>20 min</button>
-          <button onClick={this.startTimer} id={5}>25 min</button>
+          <button onClick={this.selectTime} id={1}>5 min</button>
+          <button onClick={this.selectTime} id={2}>10 min</button>
+          <button onClick={this.selectTime} id={3}>15 min</button>
+          <button onClick={this.selectTime} id={4}>20 min</button>
+          <button onClick={this.selectTime} id={5}>25 min</button>
         </div>
-        <button>Start</button>
-        <button>Stop</button>
-        <h1>{this.state.topic}</h1>
+        <button onClick={this.start}>Start</button>
+        <button onClick={this.stopTimer}>Stop</button>
+        <h1>{this.state.topicSelected}</h1>
         <h2>{this.state.timerHour + " : " + this.state.timerMinutes + " : " + this.state.timerSeconds}</h2>
         <input
           name="input"
